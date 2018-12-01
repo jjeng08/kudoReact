@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === "production") {
 require('./routes/api-routes')(app);
 
 // Connect to the Mongo DB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/reactNotes");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/kudoReact");
 
 // Start the API server
 app.listen(PORT, function() {
