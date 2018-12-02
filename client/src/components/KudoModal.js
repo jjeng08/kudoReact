@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert} from 'reactstrap';
 import InputForm from './InputForm';
 
 class KudoModal extends React.Component {
@@ -74,7 +74,7 @@ class KudoModal extends React.Component {
 		console.log(senderID)
 
 		if (this.validation(kudo)) {
-			axios.post('/api/kudos')
+			axios.post('/api/kudos', kudo)
 				.then(() => {
 					this.toggleModal();
 
@@ -84,12 +84,11 @@ class KudoModal extends React.Component {
 		} else {
 			this.setState({
 				alert: {
-					type: 'warning',
+					type: 'danger',
 					warning: "Yo, how's about you try filling in all the stuff, ya?"
 				}
 			})
 		}
-
 	}
 
 	render() {
@@ -102,6 +101,7 @@ class KudoModal extends React.Component {
 					<ModalBody>
 						<InputForm onChange={this.onChange} users={this.state.users} />
 					</ModalBody>
+					<Alert color={this.state.alert.type}>{this.state.alert.warning}</Alert>
 					<ModalFooter>
 						<Button onClick={this.toggleModal}>Never Mind</Button>
 						<Button onClick={this.postKudo}>Kudo Time</Button>
