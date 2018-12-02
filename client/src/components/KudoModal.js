@@ -1,18 +1,25 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert} from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Alert, } from 'reactstrap';
 import InputForm from './InputForm';
+import LoginForm from './LoginForm';
 
 class KudoModal extends React.Component {
 	state = {
+		adminName: '',
+		adminPassword: '',
 		users: [],
 		modal: false,
 		sender: '',
-		senderID: '',
+		senderId: '',
 		receiver: '',
 		title: '',
 		body: '',
 		alert: {
+			type: '',
+			warning: ''
+		},
+		barrier: {
 			type: '',
 			warning: ''
 		}
@@ -26,15 +33,24 @@ class KudoModal extends React.Component {
 		axios.get('/api/users')
 			.then((result) => {
 				this.setState({ users: result.data });
-				console.log(this.state.users)
 			})
 	}
 
 	onChange = (event) => {
 		this.setState({
-			[event.target.name]: event.nativeEvent.target.value
+			[event.target.name]: event.target.value
 		})
-		console.log(event.target)
+	}
+
+	onClick = (event) => {
+		const index = event.target.selectedIndex;
+		const element = event.target.childNodes[index];
+		const option = element.getAttribute('data-id');
+
+		this.setState({
+			senderId: option
+		})
+
 	}
 
 	validation = (form) => {
@@ -55,29 +71,29 @@ class KudoModal extends React.Component {
 			alert: {
 				type: '',
 				warning: ''
+			},
+			barrier: {
+				type: '',
+				warning: ''
 			}
 		})
 	}
 
 	postKudo = (event) => {
 		event.preventDefault();
-		const senderID = this.state.senderID;
 
 		let kudo = {
+			senderId: this.state.senderId,
 			sender: this.state.sender,
 			receiver: this.state.receiver,
 			title: this.state.title,
 			body: this.state.body,
 		}
 
-		console.log(kudo);
-		console.log(senderID)
-
 		if (this.validation(kudo)) {
 			axios.post('/api/kudos', kudo)
 				.then(() => {
 					this.toggleModal();
-
 					//QUESTION: HOW IS PROPS GETTING CALLED WHEN WE DON'T HAVE IT HERE? IS IT ALWAYS THERE BY DEFAULT EVEN IT IT'S NOT NAMED?
 					this.props.getKudos();
 				})
@@ -91,21 +107,55 @@ class KudoModal extends React.Component {
 		}
 	}
 
+	loginAdmin = (event) => {
+		event.preventDefault();
+
+		if (this.state.adminName === "Newton" && this.state.adminPassword === "gravity") {
+			this.props.logIn();
+			this.toggleModal();
+		} else {
+			this.setState({
+				barrier: {
+					type: 'danger',
+					warning: "Whoa there, hoss. Who do you think you are, hah?"
+				}
+			})
+		}
+
+
+	}
+	//QUESTION: WHY IS THE TERNARY BELOW FUNCTIONING LIKE THIS?
 	render() {
 		return (
 			<div>
-				<Button onClick={this.toggleModal}>Kudo!</Button>
+				<Button color="primary" onClick={this.toggleModal}>{this.props.changeText}</Button>
 
 				<Modal isOpen={this.state.modal} toggle={this.state.toggleModal}>
-					<ModalHeader>Say It With Feeling!</ModalHeader>
-					<ModalBody>
-						<InputForm onChange={this.onChange} users={this.state.users} />
-					</ModalBody>
-					<Alert color={this.state.alert.type}>{this.state.alert.warning}</Alert>
-					<ModalFooter>
-						<Button onClick={this.toggleModal}>Never Mind</Button>
-						<Button onClick={this.postKudo}>Kudo Time</Button>
-					</ModalFooter>
+					{this.props.modalType === "input" ? (
+						<div>
+							<ModalHeader>Say It With Feeling!</ModalHeader>
+							<ModalBody>
+								<InputForm onChange={this.onChange} onClick={this.onClick} users={this.state.users} />
+
+							</ModalBody>
+							<Alert color={this.state.alert.type}>{this.state.alert.warning}</Alert>
+							<ModalFooter>
+								<Button onClick={this.toggleModal}>Never Mind</Button>
+								<Button onClick={this.postKudo}>Kudo Time</Button>
+							</ModalFooter>
+						</div>) : (
+							<div>
+								<ModalHeader>Who The Hay Are You?</ModalHeader>
+								<ModalBody>
+									<LoginForm onChange={this.onChange} />
+								</ModalBody>
+								<Alert color={this.state.barrier.type}>{this.state.barrier.warning}</Alert>
+								<ModalFooter>
+									<Button onClick={this.toggleModal}>Run Away!</Button>
+									<Button onClick={this.loginAdmin}>Open Sesame!</Button>
+								</ModalFooter>
+							</div>)}
+
 				</Modal>
 			</div>
 		)
