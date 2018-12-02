@@ -8,7 +8,7 @@ class KudoModal extends React.Component {
 		users: [],
 		modal: false,
 		sender: '',
-		senderID: '',
+		senderId: '',
 		receiver: '',
 		title: '',
 		body: '',
@@ -26,15 +26,24 @@ class KudoModal extends React.Component {
 		axios.get('/api/users')
 			.then((result) => {
 				this.setState({ users: result.data });
-				console.log(this.state.users)
 			})
 	}
 
 	onChange = (event) => {
 		this.setState({
-			[event.target.name]: event.nativeEvent.target.value
+			[event.target.name]: event.target.value
 		})
-		console.log(event.target)
+	}
+
+	onClick = (event) => {
+		const index=event.target.selectedIndex;
+		const element= event.target.childNodes[index];
+		const option = element.getAttribute('data-id');
+
+		this.setState({
+			senderId: option
+		})
+		
 	}
 
 	validation = (form) => {
@@ -61,26 +70,26 @@ class KudoModal extends React.Component {
 
 	postKudo = (event) => {
 		event.preventDefault();
-		const senderID = this.state.senderID;
+
+		console.log(this.state.senderId);
 
 		let kudo = {
+			senderId: this.state.senderId,
 			sender: this.state.sender,
 			receiver: this.state.receiver,
 			title: this.state.title,
 			body: this.state.body,
 		}
 
-		console.log(kudo);
-		console.log(senderID)
-
 		if (this.validation(kudo)) {
 			axios.post('/api/kudos', kudo)
 				.then(() => {
 					this.toggleModal();
-
 					//QUESTION: HOW IS PROPS GETTING CALLED WHEN WE DON'T HAVE IT HERE? IS IT ALWAYS THERE BY DEFAULT EVEN IT IT'S NOT NAMED?
 					this.props.getKudos();
-				})
+				}).then(
+
+				)
 		} else {
 			this.setState({
 				alert: {
@@ -99,7 +108,7 @@ class KudoModal extends React.Component {
 				<Modal isOpen={this.state.modal} toggle={this.state.toggleModal}>
 					<ModalHeader>Say It With Feeling!</ModalHeader>
 					<ModalBody>
-						<InputForm onChange={this.onChange} users={this.state.users} />
+						<InputForm onChange={this.onChange} onClick={this.onClick} users={this.state.users} />
 					</ModalBody>
 					<Alert color={this.state.alert.type}>{this.state.alert.warning}</Alert>
 					<ModalFooter>

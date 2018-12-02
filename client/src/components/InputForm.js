@@ -6,17 +6,17 @@ const KudoForm = (props) => (
 		<Form>
 			<FormGroup>
 				{/* SENDER */}
-				<Input type="select" name="sender" onChange={props.onChange}>
+				<Input type="select" name="sender" onClick={props.onClick} onChange={props.onChange}>
 					<option selected disabled value=''>From?</option>
 					{props.users.map((user) => (
-						<option value={user.username} id={user._id} key={user._id}>{user.username}</option>
+						<option value={user.username} data-id={user._id} key={user._id}>{user.username}</option>
 					))}
 				</Input>
 				{/* RECEIVER */}
 				<Input type="select" name="receiver" onChange={props.onChange}>
 					<option selected disabled value=''>To?</option>
 					{props.users.map((user) => (
-						<option value={user.username} key={user._id}>{user.username}</option>
+						<option value={user.username} data-id={user._id} key={user._id}>{user.username}</option>
 					))}
 				</Input>
 
