@@ -1,39 +1,42 @@
 import React, { Component } from 'react';
-import KudosModal from './components/Modal';
-import User from './components/User';
 import * as axios from 'axios';
-
+import Kudo from './components/Kudo';
+import KudoModal from './components/KudoModal';
 
 
 class App extends Component {
 
   state = {
-    userList: []
+    kudos:[],
   }
 
-  getUsers = () => {
-    axios.get('/api/users')
-    .then((result) => {
-      this.setState({userList: result.data});
-      console.log(this.state.userList)
-    })
-  }
-
+  //DEFAULT SETUP;
   componentDidMount() {
-    this.getUsers();
+    this.getKudos();
+  }
+
+  getKudos = () => {
+    axios.get('/api/kudos')
+    .then((result) => {
+      this.setState({kudos: result.data});
+    })
   }
 
   render() {
     return (
 
       <div className="App">
-        {this.state.userList.map((user) => (
-          <User
-            key={user._id}
-            name={user.username}
+              <KudoModal getKudos={this.getKudos}/>
+        {this.state.kudos.map((kudo) => (
+          <Kudo
+            key={kudo._id}
+            sender={kudo.sender}
+            receiver={kudo.receiver}
+            title={kudo.title}
+            body={kudo.body}
           />
         ))}
-        <KudosModal />
+
       </div>
     );
   }

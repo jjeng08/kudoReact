@@ -1,0 +1,13 @@
+.singleKudo{
+	border-style:solid;
+	border-width:2px;
+	border-radius: 10px;
+	margin:20px;
+}
+
+.inputForm{
+	display:flex;
+	border-style:solid;
+	border-width:2px;
+	border-radius: 10px;
+}
