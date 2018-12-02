@@ -7,6 +7,10 @@ const kudoSchema = new Schema({
 		trim: true,
 		required: "Recipient must be included."
 	},
+	senderId: {
+		type: String,
+		trim: true
+	},
 	receiver:{
 		type: String,
 		trim: true,
