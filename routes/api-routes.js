@@ -21,6 +21,8 @@ module.exports = function (app) {
 	//Kudo routes
 	app.get('/api/kudos', function (req, res) {
 		Kudo.find({})
+			.populate("senderId")
+			.populate("receiverId")
 			.then(function (data) {
 				res.json(data);
 			})
@@ -32,8 +34,8 @@ module.exports = function (app) {
 	app.post('/api/kudos', function (req, res) {
 		const userId = req.body.senderId;
 		const newEntry = {
-			sender: req.body.sender,
-			receiver: req.body.receiver,
+			senderId: req.body.senderId,
+			receiverId: req.body.receiverId,
 			title: req.body.title,
 			body: req.body.body
 		}
@@ -49,7 +51,23 @@ module.exports = function (app) {
 			});
 	})
 
-//ADMIN ROUTES
+//ADMIN ROUTES - UI AVAILABLE 
+//These routes are for removing kudos and their references. 
+
+	app.delete('/api/kudos/:id', function (req, res) {
+		Kudo.deleteOne({ _id: req.params.id})
+			.then(function () {
+				res.json({ success: true });
+			}).catch(function (error) {
+				res.json({ error: error });
+			});
+	});
+
+	app.put('/api/users/:id', function (req, res) {
+		User.findOneAndUpdate({ _id: req.params.kudoId }, { $pull: { kudos: {_id:req.body} } }, { new: true });
+	})
+
+//ADMIN ROUTES - UI UNAVAILABLE
 //These routes are for use as admin function, accessible via Postman. 
 
 	app.post('/api/users', function (req, res) {
@@ -64,16 +82,6 @@ module.exports = function (app) {
 
 	app.delete('/api/users/:id', function (req, res) {
 		User.deleteOne({ _id: req.params.id })
-			.then(function () {
-				res.json({ success: true });
-			}).catch(function (error) {
-				res.json({ error: error });
-			});
-	});
-
-
-	app.delete('/api/kudos/:id', function (req, res) {
-		Kudo.deleteOne({ _id: req.params.id })
 			.then(function () {
 				res.json({ success: true });
 			}).catch(function (error) {

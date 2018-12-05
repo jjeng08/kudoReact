@@ -6,13 +6,10 @@ import LoginForm from './LoginForm';
 
 class KudoModal extends React.Component {
 	state = {
-		adminName: '',
-		adminPassword: '',
 		users: [],
 		modal: false,
-		sender: '',
 		senderId: '',
-		receiver: '',
+		receiverId: '',
 		title: '',
 		body: '',
 		alert: {
@@ -42,17 +39,6 @@ class KudoModal extends React.Component {
 		})
 	}
 
-	onClick = (event) => {
-		const index = event.target.selectedIndex;
-		const element = event.target.childNodes[index];
-		const option = element.getAttribute('data-id');
-
-		this.setState({
-			senderId: option
-		})
-
-	}
-
 	validation = (form) => {
 		for (let input in form) {
 			if (form[input] === '')
@@ -64,8 +50,8 @@ class KudoModal extends React.Component {
 	toggleModal = () => {
 		this.setState({
 			modal: !this.state.modal,
-			sender: '',
-			receiver: '',
+			senderId: '',
+			receiverId: '',
 			title: '',
 			body: '',
 			alert: {
@@ -84,8 +70,7 @@ class KudoModal extends React.Component {
 
 		let kudo = {
 			senderId: this.state.senderId,
-			sender: this.state.sender,
-			receiver: this.state.receiver,
+			receiverId: this.state.receiverId,
 			title: this.state.title,
 			body: this.state.body,
 		}
