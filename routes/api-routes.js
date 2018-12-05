@@ -21,6 +21,8 @@ module.exports = function (app) {
 	//Kudo routes
 	app.get('/api/kudos', function (req, res) {
 		Kudo.find({})
+			.populate("senderId")
+			.populate("receiverId")
 			.then(function (data) {
 				res.json(data);
 			})
@@ -33,8 +35,7 @@ module.exports = function (app) {
 		const userId = req.body.senderId;
 		const newEntry = {
 			senderId: req.body.senderId,
-			sender: req.body.sender,
-			receiver: req.body.receiver,
+			receiverId: req.body.receiverId,
 			title: req.body.title,
 			body: req.body.body
 		}

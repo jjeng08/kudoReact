@@ -2,19 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const kudoSchema = new Schema({
-	sender:{
-		type: String,
-		trim: true,
-		required: "Recipient must be included."
-	},
 	senderId: {
-		type: String,
-		trim: true
+		type: Schema.Types.ObjectId,
+		ref: "User"
 	},
-	receiver:{
-		type: String,
-		trim: true,
-		required: "Recipient must be included."
+	receiverId:{
+		type: Schema.Types.ObjectId,
+		ref: "User"
 	},
 	title: {
 		type:String,
