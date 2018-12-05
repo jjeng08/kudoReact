@@ -3,6 +3,7 @@ import * as axios from 'axios';
 import Kudo from './components/Kudo';
 import KudoModal from './components/KudoModal';
 import { Button } from 'reactstrap';
+import UserModal from './components/UserModal';
 
 class App extends Component {
 
@@ -58,6 +59,7 @@ class App extends Component {
           (<div className="headRow">
             <div className="headRowBox">
               <Button color="primary" onClick={this.logOut}>Log Out</Button>
+              <UserModal></UserModal>
             </div>
           </div>) :
           (<div className="headRow">
