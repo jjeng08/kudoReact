@@ -10,7 +10,7 @@ const LoginForm = (props) => (
 				<Input type="text" name="adminName" onChange={props.onChange} />
 				{/* Password */}
 				<div>Kudo</div>
-				<Input type="textare" name="adminPassword" onChange={props.onChange} />
+				<Input type="password" name="adminPassword" onChange={props.onChange} />
 			</FormGroup>
 		</Form>
 	</div>
